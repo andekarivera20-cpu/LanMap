@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Descubre empresas, organismos y lugares donde trabajar en Euskadi según tu profesión, estudios y ubicación." />
+  <title>LanMap Euskadi — Dónde puedes trabajar</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23154246'/%3E%3Cpath d='M19 15v33h27' fill='none' stroke='%2378e0be' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="LanMap Euskadi">
+      <span class="brand-mark">L</span>
+      <span>
+        <strong>LanMap</strong>
+        <small>Euskadi</small>
+      </span>
+    </a>
+    <nav>
+      <a href="#explorar">Explorar</a>
+      <a href="#ofertas">Ofertas</a>
+      <a href="#perfil">Mi perfil</a>
+      <a href="#orientacion">Orientación</a>
+      <a href="#oposiciones">Oposiciones</a>
+      <a href="#sueldos">Sueldos</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#empresas">Para empresas</a>
+    </nav>
+    <button class="saved-btn" id="openSaved">Guardados <span id="savedCount">0</span></button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Tu mapa para encontrar dónde trabajar</div>
+        <h1>No busques solo ofertas.<br><span>Descubre dónde encajas.</span></h1>
+        <p>Elige profesión, estudios o sector y encuentra empresas, organismos públicos y negocios de Euskadi a los que podrías enviar tu CV.</p>
+
+        <div class="search-shell">
+          <div class="search-modes" role="tablist" aria-label="Forma de buscar">
+            <button type="button" class="active" data-mode="profession" role="tab" aria-selected="true">Sé de qué quiero trabajar</button>
+            <button type="button" data-mode="studies" role="tab" aria-selected="false">Sé qué he estudiado</button>
+            <button type="button" data-mode="sectors" role="tab" aria-selected="false">Quiero explorar sectores</button>
+          </div>
+          <label for="mainSearch" id="searchLabel">¿De qué quieres trabajar?</label>
+          <div class="search-row">
+            <input id="mainSearch" type="search" autocomplete="off" placeholder="Ej. programador PLC, peluquero, mecánico..." list="searchSuggestions" />
+            <datalist id="searchSuggestions"></datalist>
+            <button id="searchBtn">Buscar</button>
+          </div>
+          <div class="quick-tags" id="quickTags">
+            <button data-query="automatización">Automatización</button>
+            <button data-query="mantenimiento">Mantenimiento</button>
+            <button data-query="sanidad">Sanidad</button>
+            <button data-query="mecanizado">Mecanizado</button>
+            <button data-query="administración">Administración</button>
+            <button data-query="informática">Informática</button>
+          </div>
+          <div class="concept-explorer" id="conceptExplorer"></div>
+          <div class="sector-explorer" id="sectorExplorer" hidden></div>
+          <div class="catalog-links" id="catalogLinks"></div>
+          <a class="quiz-jump" href="#orientacion">No tengo claro de qué trabajar →</a>
+        </div>
+
+        <div class="hero-stats">
+          <div><strong id="orgStat">0</strong><span>lugares para explorar</span></div>
+          <div><strong>3</strong><span>territorios</span></div>
+          <div><strong id="sectorStat">0</strong><span>ámbitos laborales</span></div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="mini-label">Ejemplo de búsqueda</div>
+        <div class="example-query">Automatización + Bizkaia</div>
+        <div class="example-list">
+          <div><span class="dot green"></span><b>Ingenierías</b><small>PLC · SCADA · Puestas en marcha</small></div>
+          <div><span class="dot blue"></span><b>Industria</b><small>Mantenimiento · Producción · Electricidad</small></div>
+          <div><span class="dot amber"></span><b>Energía y agua</b><small>Control · Instrumentación · Operación</small></div>
+        </div>
+        <div class="example-footer">Aunque hoy no tengan una oferta publicada.</div>
+      </div>
+    </section>
+
+    <section class="explore" id="explorar">
+      <aside class="filters">
+        <div class="filter-head">
+          <div>
+            <span class="eyebrow small">Filtros</span>
+            <h2>Afina tu búsqueda</h2>
+          </div>
+          <button id="clearFilters" class="text-btn">Limpiar</button>
+        </div>
+
+        <div class="filter-group">
+          <label>Territorios históricos</label>
+          <select id="provinceFilter" hidden aria-hidden="true">
+            <option value="">Todo Euskadi</option>
+            <option value="Bizkaia">Bizkaia</option>
+            <option value="Gipuzkoa">Gipuzkoa</option>
+            <option value="Álava">Álava</option>
+          </select>
+          <details class="multi-filter"><summary id="provinceSummary">Todo Euskadi</summary><div id="provinceChoices" class="multi-options"></div></details>
+        </div>
+
+        <div class="filter-group">
+          <label>Municipios</label>
+          <select id="municipalityFilter" hidden aria-hidden="true">
+            <option value="">Todos los municipios</option>
+          </select>
+          <details class="multi-filter"><summary id="municipalitySummary">Todos los municipios</summary><div class="multi-options"><input id="municipalitySearch" type="search" placeholder="Buscar municipio" aria-label="Buscar municipio"><div id="municipalityChoices"></div></div></details>
+        </div>
+
+        <div class="filter-group">
+          <label for="routeOrigin">Desde dónde te desplazas</label>
+          <input id="routeOrigin" type="text" list="originSuggestions" placeholder="Ej. Trapagaran" autocomplete="address-level2">
+          <datalist id="originSuggestions"></datalist>
+          <small class="helper">Abre la ruta y el tiempo real en Google Maps desde cada ficha. La ubicación de los negocios se muestra por municipio.</small>
+        </div>
+
+        <div class="filter-group">
+          <label>Sectores y ámbitos</label>
+          <select id="sectorFilter" hidden aria-hidden="true">
+            <option value="">Todos los sectores</option>
+          </select>
+          <details class="multi-filter"><summary id="sectorSummary">Todos los sectores</summary><div id="sectorChoices" class="multi-options"></div></details>
+        </div>
+
+        <div class="filter-group">
+          <label>Tipo de organización</label>
+          <select id="typeFilter" hidden aria-hidden="true">
+            <option value="">Todos</option>
+            <option value="Empresa privada">Empresa privada</option>
+            <option value="Organismo público">Organismo público</option>
+            <option value="Centro tecnológico">Centro tecnológico</option>
+            <option value="Cooperativa">Cooperativa</option>
+            <option value="Negocio local">Negocio local</option>
+          </select>
+          <details class="multi-filter"><summary id="typeSummary">Todos los tipos</summary><div id="typeChoices" class="multi-options"></div></details>
+        </div>
+
+        <div class="filter-group">
+          <label>Acceso al empleo</label>
+          <label class="check"><input type="checkbox" id="careerOnly"> <span>Con portal de empleo</span></label>
+          <label class="check"><input type="checkbox" id="cvOnly"> <span>Acepta candidatura / CV</span></label>
+        </div>
+
+        <div class="filter-group">
+          <label for="sortFilter">Ordenar por</label>
+          <select id="sortFilter">
+            <option value="relevance">Más relevantes</option>
+            <option value="name">Nombre A–Z</option>
+            <option value="career">Con portal de empleo primero</option>
+            <option value="location">Municipio A–Z</option>
+            <option value="rating" disabled>Mejor valoradas en Google (próximamente)</option>
+            <option value="reviews" disabled>Más reseñas en Google (próximamente)</option>
+          </select>
+          <small class="helper">Google: pendiente de integrar datos autorizados. Las demás ordenaciones funcionan ya.</small>
+        </div>
+
+        <div class="filter-group">
+          <label class="check switch-row">
+            <input type="checkbox" id="verifiedOnly">
+            <span>Solo enlaces verificados</span>
+          </label>
+        </div>
+      </aside>
+
+      <section class="results-area">
+        <div class="results-head">
+          <div>
+            <span class="eyebrow small">Resultados</span>
+            <h2 id="resultTitle">Lugares donde podrías trabajar</h2>
+            <p id="resultMeta">Explora el listado inicial de Euskadi.</p>
+          </div>
+          <button class="mobile-filter" id="mobileFilterBtn">Filtros</button>
+        </div>
+
+        <div class="active-filters" id="activeFilters"></div>
+        <div id="companyGrid" class="company-grid"></div>
+        <button class="more-btn" id="showMore" hidden>Mostrar más resultados</button>
+
+        <div class="empty-state" id="emptyState" hidden>
+          <div class="empty-icon">⌕</div>
+          <h3>No hemos encontrado resultados</h3>
+          <p id="emptyMessage">Prueba otra profesión, elimina filtros o explora otro sector. Algunos municipios aún no tienen negocios locales registrados.</p>
+          <button id="emptyClear">Ver todo Euskadi</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="resource-section" id="ofertas">
+      <div class="resource-intro"><span class="eyebrow">Ofertas actuales</span><h2>Vacantes publicadas por Lanbide</h2><p>Consulta directa al conjunto de datos abierto de Lanbide al abrir la web. Comprueba el estado y los requisitos en la oferta original antes de apuntarte. Si la fuente no responde, no mostraremos ofertas antiguas como abiertas.</p></div>
+      <div class="offer-toolbar"><label for="offerSearch">Profesión o palabra clave <input id="offerSearch" type="search" placeholder="Ej. PLC, dependiente, limpieza"></label><label for="offerProvince">Territorio <select id="offerProvince"><option value="">Todo Euskadi</option><option>Bizkaia</option><option>Gipuzkoa</option><option>Álava</option></select></label><button id="refreshOffers" type="button">Actualizar ofertas</button></div>
+      <p id="offerStatus" class="source-note" role="status">Cargando ofertas de Lanbide…</p>
+      <div class="resource-grid" id="liveOffers"></div>
+      <p class="source-note">También puedes consultar el <a href="https://apps.lanbide.euskadi.net/apps/OF_BUSQUEDA_OFERTAS?LG=C&amp;ML=OFEMEN1&amp;MS=Ea" target="_blank" rel="noopener">buscador completo de Lanbide ↗</a> y <a href="https://empleate.gob.es/empleo/index_nojs.html?JAVASCRIPTSTATUS=NONE" target="_blank" rel="noopener">Empléate ↗</a>. LanMap no gestiona las candidaturas.</p>
+      <p class="source-note"><a href="#alertas">Guardar una búsqueda para revisarla al volver ↘</a></p>
+    </section>
+
+    <section class="resource-section profile-section" id="perfil">
+      <div class="resource-intro"><span class="eyebrow">Orientación</span><h2>¿Dónde encajo con mis estudios?</h2><p>Selecciona una titulación para ver las fichas que la relacionan con posibles puestos. La coincidencia es orientativa: cada oferta establece sus requisitos.</p></div>
+      <div class="offer-toolbar"><label for="profileStudy">Lo que has estudiado <input id="profileStudy" type="search" list="profileSuggestions" placeholder="Ej. Automatización y Robótica Industrial"><datalist id="profileSuggestions"></datalist></label><button id="profileSearch" type="button">Ver lugares relacionados</button></div>
+      <div id="profileResults" class="profile-results"></div>
+      <p class="source-note">Para conocer competencias habituales y formación adicional, consulta los <a href="https://www.sepe.es/HomeSepe/es/que-es-el-sepe/que-es-observatorio/perfiles-de-la-oferta-de-empleo.html" target="_blank" rel="noopener">perfiles</a> y el <a href="https://www.sepe.es/HomeSepe/es/que-es-observatorio/deteccion-necesidades-formativas/buscador-necesidades-formativas.html" target="_blank" rel="noopener">buscador formativo</a> del SEPE.</p>
+    </section>
+
+    <section class="resource-section quiz-section" id="orientacion">
+      <div class="resource-intro"><span class="eyebrow">Descubrir opciones</span><h2>No tengo claro de qué trabajar</h2><p>Marca lo que te interesa y te mostraremos ámbitos para explorar. Son sugerencias, no un test de aptitud ni una evaluación profesional.</p></div>
+      <div class="quiz-grid">
+        <fieldset><legend>¿Qué te atrae? <small>(puedes marcar varias)</small></legend><div id="quizInterests" class="quiz-options"></div></fieldset>
+        <fieldset><legend>¿Dónde te ves trabajando?</legend><div id="quizPlaces" class="quiz-options"></div></fieldset>
+        <fieldset><legend>¿Qué valoras más?</legend><div id="quizPriorities" class="quiz-options"></div></fieldset>
+      </div>
+      <button id="quizSubmit" class="feature-button" type="button">Ver ideas para mí</button>
+      <div id="quizResults" class="resource-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="resource-section" id="cursos">
+      <div class="resource-intro"><span class="eyebrow">Formación relacionada</span><h2>Cursos para acercarte a un trabajo</h2><p>Una selección de cursos concretos publicados por Lanbide, con fechas previstas y colectivo destinatario. La disponibilidad y los requisitos se confirman siempre en la ficha oficial.</p></div>
+      <div class="offer-toolbar"><label for="courseQuery">Trabajo o habilidad <input id="courseQuery" type="search" placeholder="Ej. PLC, robótica, ventas"></label><button id="courseSearch" type="button">Buscar cursos</button></div>
+      <div id="courseResults" class="resource-grid"></div>
+      <p class="source-note">Más opciones en el <a href="https://web.lanbide.eus/apps/FR_BUSQUEDA_CURSOS" target="_blank" rel="noopener">buscador completo de Lanbide ↗</a>. Una sugerencia de curso no garantiza el acceso a una profesión.</p>
+    </section>
+
+    <section class="resource-section" id="alertas">
+      <div class="resource-intro"><span class="eyebrow">Tus búsquedas</span><h2>Alertas guardadas</h2><p>Guarda una profesión y un territorio. Al volver a abrir LanMap, la web comprobará el feed y destacará coincidencias nuevas en este navegador. No envía avisos al móvil con la página cerrada.</p></div>
+      <div class="offer-toolbar"><label for="alertQuery">Trabajo <input id="alertQuery" type="search" placeholder="Ej. programador PLC"></label><label for="alertProvince">Territorio <select id="alertProvince"><option value="">Todo Euskadi</option><option>Bizkaia</option><option>Gipuzkoa</option><option>Álava</option></select></label><button id="saveAlert" type="button">Guardar alerta</button></div>
+      <div id="alertList" class="alert-list"></div>
+    </section>
+
+    <section class="resource-section" id="oposiciones">
+      <div class="resource-intro"><span class="eyebrow">Empleo público</span><h2>Oposiciones y bolsas de trabajo</h2><p>Convocatorias con plazo y fuente oficial comprobados el 29/09/2026. Se ocultan automáticamente al vencer la fecha registrada. Confirma cualquier cambio y todos los requisitos en las bases antes de inscribirte.</p></div>
+      <div id="currentOppositions" class="resource-grid"></div>
+      <h3>Más portales oficiales</h3>
+      <div class="resource-grid" id="oppositionGrid"></div>
+    </section>
+
+    <section class="resource-section compare-section" id="comparar">
+      <div class="resource-intro"><span class="eyebrow">Tus opciones</span><h2>Compara lugares guardados</h2><p>Guarda empresas con el corazón y añade lo que diga cada oferta: sueldo, horario y contrato. Los campos que escribas son tus notas y se guardan solo en este navegador.</p></div>
+      <div id="comparisonGrid" class="comparison-wrap"></div>
+    </section>
+
+    <section class="resource-section salary-section" id="sueldos">
+      <div class="resource-intro"><span class="eyebrow">Sueldos orientativos</span><h2>Lo que se cobra por actividad</h2><p>Media <strong>bruta anual en España, 2024</strong>, según la encuesta del INE. Es la media de personas trabajadoras de cada actividad; no es un sueldo de entrada, una oferta ni un salario específico de Euskadi.</p></div>
+      <div class="salary-grid" id="salaryGrid"></div>
+      <div class="occupation-pay"><h3>Consulta por profesión</h3><p>Busca un oficio para ver el <strong>grupo de ocupación</strong> del INE más cercano. Son medias brutas anuales de España en 2024, no un sueldo exacto para ese puesto.</p><div class="offer-toolbar"><label for="salaryJob">Profesión <input id="salaryJob" type="search" placeholder="Ej. programador PLC, policía, dependiente"></label><button id="salarySearch" type="button">Consultar</button></div><div id="salaryResult" role="status"></div></div>
+      <p class="source-note">Fuente: <a href="https://www.ine.es/dyngs/Prensa/EAES2024.htm" target="_blank" rel="noopener">INE, Encuesta Anual de Estructura Salarial 2024 ↗</a>. Jornada, convenio, experiencia y puesto cambian mucho el resultado.</p>
+    </section>
+
+    <section class="how" id="como-funciona">
+      <div>
+        <span class="eyebrow">La diferencia</span>
+        <h2>Una web pensada para responder:<br>“¿A quién puedo enviar mi CV?”</h2>
+      </div>
+      <div class="steps">
+        <article><span>01</span><h3>Dinos tu perfil</h3><p>Profesión, estudios o sector. No hace falta saber el nombre de ninguna empresa.</p></article>
+        <article><span>02</span><h3>Filtra por zona</h3><p>Bizkaia, Gipuzkoa, Álava y municipio. Después podrá ampliarse a toda España.</p></article>
+        <article><span>03</span><h3>Descubre organizaciones</h3><p>Empresas privadas, administración, hospitales, cooperativas y otros empleadores.</p></article>
+        <article><span>04</span><h3>Haz seguimiento</h3><p>Guarda empresas y marca si aún no has enviado CV, ya lo enviaste o estás en entrevista.</p></article>
+      </div>
+    </section>
+
+    <section class="business" id="empresas">
+      <div>
+        <span class="eyebrow">Para empresas</span>
+        <h2>¿Falta una empresa o quieres reclamar su ficha?</h2>
+        <p>Desde cada ficha puedes proponer una corrección o añadir un enlace. La propuesta se prepara en tu navegador para compartirla; aún no hay un buzón público de recepción.</p>
+      </div>
+      <a class="cta-outline" href="#explorar">Buscar una ficha para corregir →</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand footer-brand"><span class="brand-mark">L</span><strong>LanMap Euskadi</strong></div>
+    <p>Beta · Directorio orientativo y parcial. Comprueba siempre las condiciones y vacantes en la fuente oficial de cada organización.</p>
+  </footer>
+
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+  <aside class="drawer" id="savedDrawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div><span class="eyebrow small">Tu búsqueda</span><h2>Empresas guardadas</h2></div>
+      <button id="closeSaved" aria-label="Cerrar">×</button>
+    </div>
+    <a class="drawer-compare" href="#comparar" id="openCompare">Comparar mis guardadas →</a>
+    <div id="savedList" class="saved-list"></div>
+  </aside>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden></div>
+  <section class="modal" id="companyModal" aria-hidden="true">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">×</button>
+    <div id="modalContent"></div>
+  </section>
+
+  <script src="data/companies.js"></script>
+  <script src="data/local-businesses.js"></script>
+  <script src="data/expanded-employers.js"></script>
+  <script src="data/municipalities.js"></script>
+  <script src="data/catalog.js"></script>
+  <script src="data/salaries.js"></script>
+  <script src="data/occupation-salaries.js"></script>
+  <script src="data/more-businesses.js"></script>
+  <script src="data/gasteiz-businesses.js"></script>
+  <script src="data/industrial-employers.js"></script>
+  <script src="data/taxonomy.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+  <script src="enhancements.js"></script>
+  <script src="next.js"></script>
+</body>
+</html>
